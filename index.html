@@ -513,9 +513,206 @@ body.mode-normal .stat:nth-child(n+4) { display: none !important; }
   line-height: 1;
 }
 .sb-signout:hover { color: var(--red); background: var(--red-dim); }
+
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE & RESPONSIVE FIXES
+   ════════════════════════════════════════════════════════════ */
+
+/* FIX 1: Overflow-x prevention */
+html, body { overflow-x: hidden; max-width: 100vw; }
+*, *::before, *::after { box-sizing: border-box; }
+
+/* FIX 2: Table horizontal scroll wrappers */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+.table-wrap table { min-width: 600px; }
+
+/* FIX 3: iOS input zoom prevention - all inputs must be 16px+ */
+input, select, textarea { font-size: 16px !important; }
+
+/* FIX 4: Prevent canvas overflow */
+canvas { max-width: 100%; height: auto !important; }
+
+/* FIX 5: Mobile hamburger button */
+.mob-nav-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1001;
+  width: 40px;
+  height: 40px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+}
+.mob-nav-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+.mob-nav-btn.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.mob-nav-btn.open span:nth-child(2) { opacity: 0; }
+.mob-nav-btn.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* FIX 6: Mobile sidebar overlay */
+.mob-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+.mob-sidebar-overlay.active { display: block; }
+
+/* FIX 7: Modal max-height and scroll on mobile */
+.overlay { align-items: flex-start !important; padding-top: 20px !important; overflow-y: auto !important; }
+.modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+
+/* FIX 8: Auth card on very small screens */
+.auth-card { padding: 24px; }
+
+/* FIX 9: hm24-grid on mobile - reduce columns */
+/* (handled in media query below) */
+
+/* FIX 10: Import drop area on mobile */
+.import-drop { padding: 24px; }
+
+/* ════════════════════════════════════════════════════════════
+   BREAKPOINT: max-width 600px (small phones)
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* Layout */
+  .content { padding: 12px; }
+
+  /* Stats row */
+  .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  body.mode-normal .stats-row { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Risk grid */
+  .risk-grid { grid-template-columns: 1fr !important; }
+
+  /* Grids */
+  .strat-grid, .hm24-grid { grid-template-columns: repeat(6, 1fr) !important; }
+
+  /* Page header */
+  .page-header { margin-bottom: 16px; }
+  .page-title { font-size: 18px !important; }
+
+  /* Toolbar wraps */
+  .toolbar { flex-wrap: wrap; gap: 6px; }
+  .tb-input { min-width: 0; flex: 1 1 100%; }
+
+  /* Auth card */
+  .auth-card { padding: 20px 16px; width: 100%; max-width: 100%; }
+  
+  /* Modal */
+  .modal { padding: 18px; margin: 0 8px; }
+  .overlay { padding-top: 8px !important; padding-left: 0 !important; padding-right: 0 !important; }
+
+  /* Tables */
+  table { font-size: 11px; }
+  th, td { padding: 7px 6px; }
+
+  /* Buttons */
+  .btn { padding: 8px 14px; font-size: 11px; }
+
+  /* Heatmap */
+  .hm24-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 3px; }
+  .hm24-cell { padding: 5px 2px; }
+  .hm24-hour { font-size: 8px; }
+  .hm24-val { font-size: 10px; }
+
+  /* Achievement grid */
+  .achievement-card { padding: 12px; gap: 10px; }
+  .ach-icon { font-size: 22px; }
+
+  /* Import */
+  .import-drop { padding: 20px; }
+
+  /* Tabs */
+  .tabs { flex-wrap: wrap; gap: 4px; }
+  .tab { font-size: 11px; padding: 6px 10px; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   BREAKPOINT: max-width 900px (tablets + phones)
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* Show hamburger button */
+  .mob-nav-btn { display: flex; }
+
+  /* App layout: no more side-by-side */
+  .app { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+
+  /* Sidebar: hidden by default, slides in */
+  .sidebar {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 240px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s cubic-bezier(.4,0,.2,1);
+    overflow-y: auto;
+  }
+  .sidebar.mob-open { left: 0; }
+
+  /* Content: full width, padding for hamburger */
+  .content {
+    padding: 64px 16px 20px;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: visible;
+  }
+
+  /* Risk + stats grids */
+  .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .risk-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Page header */
+  .page-title { font-size: 20px; }
+
+  /* Auth card */
+  .auth-card { padding: 28px 20px; }
+
+  /* Modal */
+  .modal { width: calc(100vw - 32px) !important; max-width: 100% !important; padding: 20px; }
+
+  /* Tabs scroll */
+  .tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  /* Toolbar */
+  .toolbar { flex-wrap: wrap; }
+
+  /* Heatmap cols */
+  .hm24-grid { grid-template-columns: repeat(8, 1fr) !important; }
+
+  /* Arena/coach sections */
+  .arena-grid, .coach-grid { grid-template-columns: 1fr !important; }
+}
 </style>
 </head>
 <body class="mode-normal">
+
+<!-- ─── MOBILE NAV BUTTON ─── -->
+<button class="mob-nav-btn" id="mob-nav-btn" aria-label="Open navigation" onclick="toggleMobSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="mob-sidebar-overlay" id="mob-sidebar-overlay" onclick="closeMobSidebar()"></div>
+
 
 <!-- ─── AUTH SCREEN ─── -->
 <div id="auth-screen">
@@ -1588,6 +1785,36 @@ body.mode-normal .stat:nth-child(n+4) { display: none !important; }
 <div class="notif" id="notif"></div>
 
 <script>
+// ─── MOBILE SIDEBAR ────────────────────────────────────────
+function toggleMobSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('mob-sidebar-overlay');
+  const btn = document.getElementById('mob-nav-btn');
+  const isOpen = sidebar.classList.contains('mob-open');
+  if (isOpen) {
+    closeMobSidebar();
+  } else {
+    sidebar.classList.add('mob-open');
+    overlay.classList.add('active');
+    btn.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMobSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('mob-sidebar-overlay');
+  const btn = document.getElementById('mob-nav-btn');
+  sidebar.classList.remove('mob-open');
+  overlay.classList.remove('active');
+  btn.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close mobile sidebar when a nav item is clicked (handled inside nav() directly)
+// ────────────────────────────────────────────────────────────
+
+
 // ────────────────────────────────────────────────────────────────────────────
 // DATA
 // ────────────────────────────────────────────────────────────────────────────
@@ -1964,7 +2191,7 @@ function renderAnalytics() {
   // Monthly table
   const months={};
   trades.forEach(t=>{const m=t.date.slice(0,7);if(!months[m])months[m]={trades:[],pnl:0,pnlD:0,wins:0,losses:0};months[m].trades.push(t);months[m].pnl+=t.pnl||0;months[m].pnlD+=t.pnld||0;if(t.outcome==='WIN')months[m].wins++;else if(t.outcome==='LOSS')months[m].losses++;});
-  let tbl='<table style="width:100%;font-size:12px;border-collapse:collapse;">';
+  let tbl='<div class="table-wrap"><table style="width:100%;font-size:12px;border-collapse:collapse;">';
   tbl+='<thead><tr style="border-bottom:1px solid var(--border);">';
   ['Month','Trades','Wins','Losses','Win Rate','PnL %','PnL $'].forEach(h=>tbl+=`<th style="padding:8px 12px;text-align:left;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;">${h}</th>`);
   tbl+='</tr></thead><tbody>';
@@ -1980,7 +2207,7 @@ function renderAnalytics() {
       <td style="padding:9px 12px;font-family:var(--mono);color:${d.pnlD>=0?'var(--green)':'var(--red)'};">${fmtCurr(d.pnlD)}</td>
     </tr>`;
   });
-  tbl+='</tbody></table>';
+  tbl+='</tbody></table></div>';
   document.getElementById('monthly-table').innerHTML=tbl;
 
   // Strategy comparison (dynamic)
@@ -2683,7 +2910,7 @@ function renderProp() {
   const tlog = [...startTrades].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,15);
   document.getElementById('prop-log').innerHTML = `
     <div class="chart-ttl" style="margin-bottom:12px;">Recent trades on this challenge</div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead><tr style="border-bottom:1px solid var(--border);">
         ${['Date','Pair','Outcome','PnL %','PnL $','Balance','Rule Status'].map(h=>`<th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;">${h}</th>`).join('')}
       </tr></thead>
@@ -2698,7 +2925,7 @@ function renderProp() {
           <td style="padding:8px 10px;"><span style="font-size:10px;color:${ok?'var(--green)':'var(--red)'};">${ok?'✓ OK':'✕ BREACH'}</span></td>
         </tr>`;}).join('')}
       </tbody>
-    </table>`;
+    </table></div>`;
 }
 
 // ── WEEKLY REVIEW ─────────────────────────────────────────────────────────────
@@ -3915,7 +4142,7 @@ function showImportPreview(parsed, formatLabel) {
     </div>
 
     <div style="max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:11px;">
         <thead style="position:sticky;top:0;background:var(--bg3);">
           <tr>${['Date','Pair','Dir','Lot','Entry','PnL $','Session'].map(h=>`<th style="padding:7px 8px;text-align:left;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);">${h}</th>`).join('')}</tr>
         </thead>
@@ -3931,7 +4158,7 @@ function showImportPreview(parsed, formatLabel) {
           </tr>`).join('')}
           ${parsed.length>50?`<tr><td colspan="7" style="padding:8px;text-align:center;color:var(--text3);font-size:11px;">+ ${parsed.length-50} more trades not shown</td></tr>`:''}
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <button class="btn-save" style="width:100%;padding:12px;font-size:13px;" onclick="importTrades(window._importParsed)">
@@ -3990,6 +4217,7 @@ function renderAll(){
 }
 
 function nav(page) {
+  if (window.innerWidth <= 900 && typeof closeMobSidebar === "function") closeMobSidebar();
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   const pg = document.getElementById('page-'+page);
   if (pg) pg.classList.add('active');
